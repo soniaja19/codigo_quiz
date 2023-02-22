@@ -1,4 +1,4 @@
-import 'package:codigo_quiz/question.dart';
+import 'package:codigo_quiz/quiz_brain.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -7,15 +7,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int questionNumber = 0;
-
-  List<Question> question = [
-    Question(questiontext: "¿He dormido 8 horas?", questionAnswer: false),
-    Question(questiontext: "¿La tierra es plana?", questionAnswer: false),
-    Question(questiontext: "¿El hombre fue a la luna?", questionAnswer: true),
-    Question(questiontext: "¿Ella me quieres?", questionAnswer: false),
-    Question(questiontext: "¿He almorzado hoy días?", questionAnswer: true),
-  ];
+  QuizBrain mandarina = QuizBrain();
 
   // List<String> question = [
   //   "¿He dormido 8 horas?",
@@ -48,7 +40,8 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: Text(
-                  question[questionNumber].questiontext,
+                  // mandarina.question[questionNumber].questiontext,
+                  mandarina.getQuestionText(),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 22.0,
@@ -73,7 +66,8 @@ class _HomePageState extends State<HomePage> {
               child: MaterialButton(
                 onPressed: () {
                   //Obtenemos la respuesta correcta de  la pregunta
-                  bool correctAnswer = question[questionNumber].questionAnswer;
+                  bool correctAnswer = mandarina.getQuestionAnswer();
+                  // mandarina.question[questionNumber].questionAnswer;
 
                   //Comparamos la respuesta con el valor verdadero
                   if (correctAnswer == true) {
@@ -102,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                   setState(() {});
 
                   //el valor de contador aumenta en 1 para que aoarezcan las preguntas
-                  questionNumber++;
+                  mandarina.nextQuestion();
                 },
                 color: const Color(0xff3bceac),
                 child: const Text(
@@ -116,7 +110,8 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(8.0),
               child: MaterialButton(
                 onPressed: () {
-                  bool correctAnswer = question[questionNumber].questionAnswer;
+                  bool correctAnswer = mandarina.getQuestionAnswer();
+                  // mandarina.question[questionNumber].questionAnswer;
                   if (correctAnswer == false) {
                     //print("La respuesta es correcta: $correctAnswer");
                     scoreKeeper.add(
@@ -134,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   }
                   setState(() {});
-                  questionNumber++;
+                  mandarina.nextQuestion();
                 },
                 color: const Color(0xffff6b6b),
                 child: const Text(
