@@ -1,5 +1,6 @@
 import 'package:codigo_quiz/quiz_brain.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,38 +13,64 @@ class _HomePageState extends State<HomePage> {
   List<Icon> scoreKeeper = [];
 
   void checkQuestion(bool type) {
-//Obtenemos la respuesta correcta de  la pregunta
-    bool correctAnswer = mandarina.getQuestionAnswer();
-    // mandarina.question[questionNumber].questionAnswer;
-
-    //Comparamos la respuesta con el valor verdadero
-    if (correctAnswer == type) {
-      // Si la respuesta correcta es verdadera
-      // Se agrega un ícono a la lista de la respuesta
-      //  print("La respuesta es correcta: $correctAnswer");
-      scoreKeeper.add(
-        const Icon(
-          Icons.check,
-          color: Colors.green,
-        ),
-      );
-
-      // Si la respuesta correcta es falsa
-      // Se agrega un ícono de error a la lista de la respuesta
+    if (mandarina.isFinshed() == true) {
+      //Aqui se coloca la ventana de alerta
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Quiz finalizado",
+        desc: "¿Quieres iniciar nuevamente?",
+        buttons: [
+          DialogButton(
+            onPressed: () {
+              mandarina.restart();
+              scoreKeeper.clear();
+              Navigator.pop(context);
+              setState(() {});
+            },
+            width: 120,
+            child: const Text(
+              "Reiniciar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+        ],
+      ).show();
     } else {
-      scoreKeeper.add(
-        const Icon(
-          Icons.close,
-          color: Colors.red,
-        ),
-      );
+      bool correctAnswer = mandarina.getQuestionAnswer();
+      // mandarina.question[questionNumber].questionAnswer;
+
+      //Comparamos la respuesta con el valor verdadero
+      if (correctAnswer == type) {
+        // Si la respuesta correcta es verdadera
+        // Se agrega un ícono a la lista de la respuesta
+        //  print("La respuesta es correcta: $correctAnswer");
+        scoreKeeper.add(
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+
+        // Si la respuesta correcta es falsa
+        // Se agrega un ícono de error a la lista de la respuesta
+      } else {
+        scoreKeeper.add(
+          const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+
+      //Se redibuja el widget = se ejecuta el método build
+      setState(() {});
+
+      //el valor de contador aumenta en 1 para que aoarezcan las preguntas
+      mandarina.nextQuestion();
     }
 
-    //Se redibuja el widget = se ejecuta el método build
-    setState(() {});
-
-    //el valor de contador aumenta en 1 para que aoarezcan las preguntas
-    mandarina.nextQuestion();
+//Obtenemos la respuesta correcta de  la pregunta
   }
 
   @override
